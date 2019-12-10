@@ -1,0 +1,49 @@
+function testRun() {
+  var delayInMilliseconds = 1000; //1 second
+
+  setTimeout(function() {
+  //your code to be executed after 1 second
+  }, delayInMilliseconds);
+  logNamesAndMajors()
+}
+
+
+function logNamesAndMajors() {
+  var ss = SpreadsheetApp.openByUrl(
+    "https://docs.google.com/spreadsheets/d/1LQCf6kPnUT7MFa42POxRFG8XZwOiuRi7dsOnpcIxQSE/edit?usp=sharing");
+  var sheet = ss.getSheetByName("Form Responses 1");
+  var startRow = 2;  // First row of data to process
+  var startCol = 1;
+  var numColumn = 6;
+  var numRows = 100000;   // Number of rows to process
+  var dataRange = sheet.getRange(startRow, startCol, numRows, numColumn).getValues();
+  
+  for (i in dataRange){
+    if (dataRange[i][1] === "") {
+      
+
+      var dataToPut = dataRange[i-1];
+      Logger.log(dataToPut);
+      putDataInGsheet(dataToPut);  
+      break;
+    }
+  }
+}
+
+
+function putDataInGsheet(dataToPut){
+  var ss = SpreadsheetApp.openByUrl(
+    "https://docs.google.com/spreadsheets/d/1LQCf6kPnUT7MFa42POxRFG8XZwOiuRi7dsOnpcIxQSE/edit?usp=sharing");
+   var sheet = ss.getSheetByName("Datasource");
+  var startRow = 2;  // First row of data to process
+  var startCol = 1;
+  var numRows = 1;   // Number of rows to process
+  var numColumn = 6;
+  var dataRange = sheet.getRange(startRow, startCol, numRows, numColumn);
+  dataRange.setValues([dataToPut]);
+  var cell = sheet.getRange("E2");
+
+  // Plain text
+  cell.setNumberFormat("h:mm:ss");
+  
+}
